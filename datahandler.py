@@ -8,6 +8,7 @@ The source of data can be a sql or excel databases
 Connections and other configurations of databases are stored in an excel file named config.xlsx 
 '''
 
+# READ DATABASE CONFIGS FROM CONFIG EXCEL FILE
 configs_wb = load_workbook(filename="C:\\wm\\equity\\CONFIG\\configs.xlsx",data_only=True)
 configs_ws = configs_wb['IND_EQ_DB_Configs']
 db_host,db_port,db_name,db_user,db_user_password,db_driver = '','','','','',''
@@ -27,18 +28,21 @@ while configs_ws.cell(row=row, column= 1).value != None:
             db_driver = str(configs_ws.cell(row=row, column=2).value).strip()
         row = row + 1
 
+# READ DATA FROM DATABASE AND RETURN A PANDA DATAFRAME OF QUERIED RESULT
 def read_db_data(query):
     engine_url = db_driver + '://' + db_user + ':' + db_user_password + '@' + db_host + ':' + db_port + '/' + db_name
     engine = db.create_engine(engine_url)
     data = pd.read_sql_query(query, engine)
     return data
 
+# EXECUTE ANY QUERY IN DB, USUALLY USED FOR INSERTING DATA IN DB
 def insert_into_db_data(query):
     engine_url = db_driver + '://' + db_user + ':' + db_user_password + '@' + db_host + ':' + db_port + '/' + db_name
     engine = db.create_engine(engine_url)
     conn = engine.connect()
     conn.execute(query)
 
+# GET FINANCIALS, SEGREGATE THE FINANCIALL DATA AND INSERT IT INTO DB
 def write_fin_to_db(findata, table):
     for k, v in findata.items():
         for k1, v1 in v.items():
