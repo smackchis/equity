@@ -10,7 +10,7 @@ df_downloaded_symbol = datahandler.read_db_data(ann_bal_sheet_symbols_query)
 for index, row in df.iterrows():
     sym = row['symbol'] + '.BO'
     if sym not in df_downloaded_symbol.values:
-        print(sym, "downloading balance sheet")
+        print(sym, "downloading annual balance sheet")
         yahoo_financials = YahooFinancials(sym)
         AnnualBalSheetData = yahoo_financials.get_financial_stmts('annual', 'balance')
         print(AnnualBalSheetData)
