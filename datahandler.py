@@ -56,6 +56,8 @@ def write_fin_to_db(findata, table):
                         values_string = values_string + ", '" + str(k3) + "'"
                         for k4, v4 in v3.items():
                             columns_string = columns_string + ', ' + str(k4)
+                            if v4 == None:
+                                v4 = 'NULL'
                             values_string = values_string + ', ' + str(v4)
                             df[k4] = [v4]
                     columns_string = columns_string + ')'
