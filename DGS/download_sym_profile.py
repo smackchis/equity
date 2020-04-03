@@ -11,9 +11,11 @@ def write_profile_to_db(data):
 
         if profile != None:
             for col, val in profile.items():
+                col = (str(col)).replace("'","")
                 columns_string = columns_string + ', ' + str(col)
                 if val == None:
                     val = 'NULL'
+                val = (str(val)).replace("'", "")
                 values_string = values_string + ", '" + str(val) + "'"
         columns_string = columns_string + ')'
         values_string = values_string + ')'
