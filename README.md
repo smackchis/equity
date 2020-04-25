@@ -4,7 +4,7 @@ Project Plan: The project is divided in multiple blocks based on its function. T
 
 A. DGS (Data gathering and storage) This block is to gather and store all the data needed for equity analysis. The basic concept is to find the source from which data can be downloaded and store it on local disc. For large data sets microsift sql server is used. For ad-hoc and small set of data excel or any other file may be used.
 
-B. DPS (Data processing and storage) This block is to calculate analyses fundamental financial ratios, macroeconomic factors, Technical factors etc from financial data stored in DGS. This will include basic equity analysis fundamental formulas, equity valuation models and self made or other statistical models. The result of these processed data will be stored.
+B. DPS (Data processing and storage) This block is to calculate analyses fundamental financial ratios, macroeconomic factors, Technical factors etc from financial data stored in DGS. This will include basic equity analysis fundamental formulas, equity valuation and risk models and self made or other statistical models. The result of these processed data will be stored.
 
 C. Portfolio Construction: This block will compare risk and return of the analysed data and construct a risk based optimal portfolio for investment.
 
