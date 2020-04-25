@@ -1,17 +1,18 @@
-from nsetools import Nse
 from nsepy import get_history
+import pymssql
 from datetime import date
 import time
 import datetime
 from calendar import monthrange
 import numpy
-nse = Nse()
+import datahandler
+
 
 
 data_dir = 'D:/wm_data/'
 db_host = '127.0.0.1'
 db_user = 'wealth_manager'
-db_user_password = 'Rome2017'
+db_user_password = 'wm@2020'
 db_table = 'wm'
 
 def todays_date():
@@ -58,12 +59,13 @@ def download_market_data(current_year,current_month,stock_symbol,workbook_path,r
   #write_to_workbook(workbook_path,row,1,stock_symbol)
 
 def download_ten_year_market_data(yr,mon,symbol,conn):   #,host, user, password, table):
-  stock_hist_price = get_history(symbol=symbol,start=date(yr-10,mon-1,1),end=date(yr,mon-1,1))
-  stock_hist_price = stock_hist_price.replace(numpy.nan,'NULL', regex=True)
-  for md_date, row in stock_hist_price.iterrows():
-    Symbol, Series, Prev_Close, Open = row['Symbol'], row['Series'], row['Prev Close'], row['Open']
-    High, Low, Last, Close, VWAP, Volume = row['High'], row['Low'], row['Last'], row['Close'], row['VWAP'], row['Volume']
-    Turnover, Deliverable_Volume, Deliverble, Trades = row['Turnover'],row['Deliverable Volume'],row['%Deliverble'],row['Trades']
+    stock_hist_price = get_history(symbol=symbol,start=date(yr-10,mon-1,1),end=date(yr,mon-1,1))
+    stock_hist_price = stock_hist_price.replace(numpy.nan,'NULL', regex=True)
+    #for md_date, row in stock_hist_price.iterrows():
+        #Symbol, Series, Prev_Close, Open = row['Symbol'], row['Series'], row['Prev Close'], row['Open']
+        #High, Low, Last, Close, VWAP, Volume = row['High'], row['Low'], row['Last'], row['Close'], row['VWAP'], row['Volume']
+        #Turnover, Deliverable_Volume, Deliverble, Trades = row['Turnover'],row['Deliverable Volume'],row['%Deliverble'],row['Trades']
+    print(stock_hist_price)
     #print(md_date, Symbol, Series, Prev_Close, Open, High, Low, Last, Close, VWAP, Volume, Turnover, Deliverable_Volume,
     #      Deliverble, Trades)
     #connect_database(conn,md_date, Symbol, Series, Prev_Close, Open, High, Low, Last, Close, VWAP, Volume, Turnover, Deliverable_Volume, Deliverble, Trades)
@@ -84,7 +86,7 @@ def connect_database(conn,md_date,Symbol, Series, Prev_Close, Open, High, Low, L
   #print(insert_query)
   cursor = conn.cursor()
   cursor.execute(insert_query)
-  conn.commit()
+  ##conn.commit()
   #print(md_date, Symbol, Series, Prev_Close, Open, High, Low, Last, Close, VWAP, Volume, Turnover, Deliverable_Volume,Deliverble, Trades)
   #for row in cursor:
   #print(row)
@@ -92,32 +94,19 @@ def connect_database(conn,md_date,Symbol, Series, Prev_Close, Open, High, Low, L
 
 current_date,current_month,current_year = todays_date()
 sym_list_query = "use wm; select symbol from dbo.symbol_list;"
+md_present_in_db = ""
 #row = 2
 df = datahandler.read_db_data(sym_list_query)
+#df_downloaded_symbol = datahandler.read_db_data(md_present_in_db)
+print(df)
 symbol_download_count = 0
-for stock_symbol, stock_name in nse_listed_stock.items():
-  #stock_downloaded = check_for_symbol_data(workbook_path, row, stock_symbol)
-  #print(stock_symbol,' exists in sheet = ' , stock_downloaded)
-  #if stock_downloaded == False:
-  print(datetime.datetime.now(),' downloading: ' + stock_symbol)
-  check_symbol_list_in_db = f"select symbol from symbol_list where symbol = '{stock_symbol}'"
-  cursor = conn.cursor()
-  cursor.execute(check_symbol_list_in_db)
-  symbol_downloaded = cursor.rowcount
-  if symbol_downloaded == 0:
-    symbol_download_count = symbol_download_count +1
-    if symbol_download_count == 1:
-      delete_existing_db_entries = f"delete from dbo.wm_market_data where md_symbol = '{stock_symbol}'"
-      cursor.execute(delete_existing_db_entries)
-      conn.commit()
-      #download_market_data(current_year,current_month, stock_symbol, workbook_path, row)
+conn = pymssql.connect(db_host, db_user, db_user_password, db_table)
+#test = get_history(symbol='SOTL',start=date(2020,1,1),end=date(2020,2,1))
+#print(test)
+for index, row in df.iterrows():
+    stock_symbol = row['symbol']
+    print(datetime.datetime.now(),' downloading: ' + stock_symbol)
+    #download_market_data(current_year,current_month, stock_symbol, workbook_path, row)
     download_ten_year_market_data(current_year,current_month, stock_symbol,conn)     #,db_host, db_user, db_user_password, db_table)
-    stock_name = stock_name.replace("'","")
-    insert_symbol = f"use wm insert into dbo.symbol_list (symbol,name) values ('{stock_symbol}','{stock_name}')"
-    #print(insert_symbol)
-    cursor =conn.cursor()
-    cursor.execute(insert_symbol)
-    conn.commit()
-  else:
-    print(datetime.datetime.now(), stock_symbol + ' already in db ' )
+
 conn.close()
