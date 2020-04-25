@@ -6,6 +6,6 @@ A. DGS (Data gathering and storage) This block is to gather and store all the da
 
 B. DPS (Data processing and storage) This block is to calculate analyses fundamental financial ratios, macroeconomic factors, Technical factors etc from financial data stored in DGS. This will include basic equity analysis fundamental formulas, equity valuation and risk models and self made or other statistical models. The result of these processed data will be stored.
 
-C. Portfolio Construction: This block will compare risk and return of the analysed data and construct a risk based optimal portfolio for investment.
+C. Portfolio Construction: This block will compare risk and return of the analysed data and construct a risk based optimal portfolio for investment. This has not been thought through yet after block A and B start giving desired result this will be kicked off.
 
 D. Continous rebalancing and reconstitution. This block with monitor the market conditions and data continously and alert the portfolio manager on the rebalancing and reconstitution of portfolios. This has not been thought through yet after block A, B and C start giving desired result this will be kicked off.
