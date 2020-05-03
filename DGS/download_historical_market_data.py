@@ -20,7 +20,6 @@ for index, row in df.iterrows():
         db_latest_date = datetime.strptime(db_latest_date,'%Y-%m-%d').date()
         start_year, start_month, start_day = int(db_latest_date.strftime("%Y")), int(db_latest_date.strftime("%m")), int(db_latest_date.strftime("%d"))
         stock_hist_price = get_history(symbol=symbol, start=date(start_year, start_month, start_day),end=date(curr_year, curr_month, curr_day))
-
     else:
         stock_hist_price = get_history(symbol=symbol, start=date(curr_year - 10, curr_month - 1, 1), end=date(curr_year, curr_month, curr_day))
     insert_query = ''
