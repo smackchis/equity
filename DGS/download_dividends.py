@@ -1,12 +1,6 @@
 from yahoofinancials import YahooFinancials
 import datahandler
 from datetime import date
-from datetime import datetime, timedelta
-
-curr_date = date.today()
-curr_year = int(curr_date.strftime("%Y"))
-curr_month = int(curr_date.strftime("%m"))
-curr_day = int(curr_date.strftime("%d"))
 
 sym_list_query = "use wm; select symbol from dbo.symbol_list;"
 existing_dividends_query = 'use wm; select distinct concat([symbol],[date]) from dbo.dividends'
@@ -41,7 +35,6 @@ for index, row in df.iterrows():
                         insert_query = insert_query + f" '{parsed_value}')"
 
                 try:
-
                     if (sym_value+date_value) not in df_downloaded_dividends.values:
                         print(insert_query)
                         datahandler.insert_into_db_data(insert_query)
